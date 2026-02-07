@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Email View</title>
+</head>
+<body >
+
+<h2>Email Details</h2>
+
+<div >
+    <div >
+        <p><strong>ID:</strong> <span th:text="${email.getId()}">123</span></p>
+        <p><strong>From:</strong> <span th:text="${email.getFrom()}">sender@example.com</span></p>
+        <p><strong>To:</strong> <span th:text="${email.getTo()}">receiver@example.com</span></p>
+        <p><strong>Date:</strong> <span th:text="${#dates.format(email.getDate, 'dd-MMM-yyyy HH:mm')}">07-Feb-2026</span></p>
+        <p><strong>Subject:</strong> <span th:text="${email.getSubject()}">Subject line</span></p>
+        <p><strong>Read:</strong> <span th:text="${email.isRead()}"></span></p>
+    </div>
+</div>
+
+<h4>Content</h4>
+<div>
+    <span th:utext="${email.getContent()}">Email body goes here</span>
+</div>
+
+<h4>Attachments</h4>
+<ul th:if="${email.obj != null}">
+    <li th:each="att : ${email.obj}">
+        <span th:text="${att.getName()}">filename.pdf</span>
+        (<span th:text="${att.getSize()}">1024</span> bytes,
+        <span th:text="${att.getContentType()}">application/pdf</span>)
+        <!-- Example download link if you expose attachment by index -->
+        <a th:href="@{/email/attachment/{id}/{index}(id=${email.getId()}, index=${iter.index})}" class="btn btn-sm btn-primary">Download</a>
+    </li>
+</ul>
+<div th:if="${#lists.isEmpty(email.getObj())}" class="alert alert-info">
+    No attachments.
+</div>
+</body>
+</html>
